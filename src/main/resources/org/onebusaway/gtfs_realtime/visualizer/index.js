@@ -143,7 +143,7 @@ function Init() {
 	};
 	
 	var vehicles_by_id = {};
-	var animation_steps = 20;
+	var animation_steps = 5;
 
 	function UpdateVehicle(v_data, updates) {
 		var id = v_data.id;
