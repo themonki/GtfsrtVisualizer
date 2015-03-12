@@ -1,2 +1,3 @@
+mvn clean
 mvn package
-/usr/local/java/jdk1.8.0_31/bin/java -jar target/onebusaway-gtfs-realtime-visualizer-0.0.1-SNAPSHOT.jar --vehiclePositionsUrl=http://localhost:8080/vehicle-positions
+/usr/local/java/jdk1.8.0_31/bin/java -jar target/onebusaway-gtfs-realtime-visualizer-0.0.1-SNAPSHOT.jar --vehiclePositionsUrl=http://localhost:8082/vehicle-positions
