@@ -202,11 +202,9 @@ public class VisualizerService {
 			description += ", </br>stop_id=" + vehicle.getStopId();
 			description += ", </br>timestamp=" + df.format(new Date(vehicle.getTimestamp()));;
 			description += ", </br>label=" + vehicle.getVehicle().getLabel();
-			description += ", </br>license_plate=" + vehicle.getVehicle().getLabel();
+			description += ", </br>license_plate=" + vehicle.getVehicle().getLicensePlate();
 			description += ", </br>current_status=" + vehicle.getCurrentStatus().name();
 			description += ", </br>congestion_level=" + vehicle.getCongestionLevel().name();
-//			description += ", </br>=" + vehicle.getTrip();
-
 			v.setDescription(description);
       
       //modificar para agregar datos a la ventana
