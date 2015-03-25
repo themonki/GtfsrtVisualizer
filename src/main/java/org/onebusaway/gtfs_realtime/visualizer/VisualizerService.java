@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
@@ -189,7 +190,7 @@ public class VisualizerService {
 			// Create an instance of SimpleDateFormat used for formatting
 			// the string representation of date (month/day/year)
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-      
+			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 			String description = "";
 			
 			description += "id=" + vehicleId;
