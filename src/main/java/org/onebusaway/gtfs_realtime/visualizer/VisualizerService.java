@@ -190,7 +190,7 @@ public class VisualizerService {
 			// Create an instance of SimpleDateFormat used for formatting
 			// the string representation of date (month/day/year)
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-			df.setTimeZone(TimeZone.getTimeZone("UTC"));
+			
 			String description = "";
 			
 			description += "id=" + vehicleId;
@@ -201,7 +201,10 @@ public class VisualizerService {
 			description += ", </br>schedule_relationship=" + vehicle.getTrip().getScheduleRelationship();
 			description += ", </br>current_stop_sequence=" + vehicle.getCurrentStopSequence();
 			description += ", </br>stop_id=" + vehicle.getStopId();
-			description += ", </br>timestamp=" + df.format(new Date(vehicle.getTimestamp()));;
+			description += ", </br>timestamp_number=" + vehicle.getTimestamp();
+			description += ", </br>timestamp_local=" + df.format(new Date(vehicle.getTimestamp()));
+			df.setTimeZone(TimeZone.getTimeZone("UTC"));
+			description += ", </br>timestamp_UTC=" + df.format(new Date(vehicle.getTimestamp()));
 			description += ", </br>label=" + vehicle.getVehicle().getLabel();
 			description += ", </br>license_plate=" + vehicle.getVehicle().getLicensePlate();
 			description += ", </br>current_status=" + vehicle.getCurrentStatus().name();
