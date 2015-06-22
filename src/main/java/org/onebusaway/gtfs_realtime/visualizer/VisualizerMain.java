@@ -33,7 +33,8 @@ import com.google.inject.Module;
 public class VisualizerMain {
 
   private static final String ARG_VEHICLE_POSITIONS_URL = "vehiclePositionsUrl";
-  
+  private static final String ARG_PORT = "port";
+    
   public static void main(String[] args) throws Exception {
     VisualizerMain m = new VisualizerMain();
     m.run(args);
@@ -59,8 +60,13 @@ public class VisualizerMain {
 
     VisualizerService service = injector.getInstance(VisualizerService.class);
     service.setVehiclePositionsUri(new URI(
-        cli.getOptionValue(ARG_VEHICLE_POSITIONS_URL)));
-    injector.getInstance(VisualizerServer.class);
+        cli.getOptionValue(ARG_VEHICLE_POSITIONS_URL)));    
+    
+    VisualizerServer server = injector.getInstance(VisualizerServer.class);
+    
+    if (cli.hasOption(ARG_PORT)) {
+    	server.setPort(Integer.parseInt(cli.getOptionValue(ARG_PORT)));
+	}
 
     LifecycleService lifecycleService = injector.getInstance(LifecycleService.class);
     lifecycleService.start();
@@ -72,5 +78,6 @@ public class VisualizerMain {
 
   private void buildOptions(Options options) {
     options.addOption(ARG_VEHICLE_POSITIONS_URL, true, "");
+    options.addOption(ARG_PORT, true, "");
   }
 }

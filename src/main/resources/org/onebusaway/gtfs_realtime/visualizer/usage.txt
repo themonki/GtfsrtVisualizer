@@ -2,8 +2,9 @@ Description:
   Visualize GTFS-realtime vehicle position data.
   
 Usage:
-  java -jar demo.jar --vehiclePositionsUrl=url
+  java -jar demo.jar --vehiclePositionsUrl=url [--port=port]
 
 Args:
   --vehiclePositionsUrl=url           GTFS-realtime vehicle positions url
+  --port=port                         Port where the app run, default 8081
   
