@@ -15,6 +15,7 @@
 # data
 **.pb
 **.properties
+**visualizer.log
 
 # mvn
 target
