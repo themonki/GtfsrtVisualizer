@@ -16,6 +16,9 @@
 package org.onebusaway.gtfs_realtime.visualizer;
 
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
@@ -85,6 +88,35 @@ public class VisualizerService {
 
   public void setVehiclePositionsUri(URI uri) {
     _vehiclePositionsUri = uri;
+    authentication(_vehiclePositionsUri);
+  }
+  
+  public void authentication(URI uri){
+	  String  user = null, pass = null;
+	  try{
+		  final URL url = uri.toURL();
+		  if(url.getUserInfo() != null || !url.getUserInfo().isEmpty()){
+			  user = url.getUserInfo().split(":")[0];
+			  pass = url.getUserInfo().split(":")[1];
+		  }
+	  
+	  if (user != null && pass != null) {
+		  _log.info("Using HTTP basic authentication with " + user);
+		  Authenticator.setDefault(new Authenticator() {
+			  final String user = url.getUserInfo().split(":")[0];
+			  final String pass = url.getUserInfo().split(":")[1];
+			  @Override
+			  protected PasswordAuthentication getPasswordAuthentication() {
+				  return new PasswordAuthentication(user, pass.toCharArray());
+			  }
+		  });
+	  }
+	  } catch(ArrayIndexOutOfBoundsException e){
+		  _log.info(e.toString());
+	  } catch (MalformedURLException e) {
+		  // TODO Auto-generated catch block
+		  _log.info(e.toString());
+	  }
   }
 
   @PostConstruct
@@ -139,7 +171,6 @@ public class VisualizerService {
 
     URL url = _vehiclePositionsUri.toURL();
     FeedMessage feed = FeedMessage.parseFrom(url.openStream());
-//    System.out.println(feed);
     boolean hadUpdate = processDataset(feed);
 
     if (hadUpdate) {
@@ -187,29 +218,36 @@ public class VisualizerService {
       
       /**********/
 
-			// Create an instance of SimpleDateFormat used for formatting
-			// the string representation of date (month/day/year)
-			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-			
-			String description = "";
-			
-			description += "id=" + vehicleId;
-			description += ", </br>latitude=" + position.getLatitude();
-			description += ", </br>longitude=" + position.getLongitude();
-			description += ", </br>trip=" + vehicle.getTrip().getTripId();
-			description += ", </br>route=" + vehicle.getTrip().getRouteId();
-			description += ", </br>schedule_relationship=" + vehicle.getTrip().getScheduleRelationship();
-			description += ", </br>current_stop_sequence=" + vehicle.getCurrentStopSequence();
-			description += ", </br>stop_id=" + vehicle.getStopId();
-			description += ", </br>timestamp_number=" + vehicle.getTimestamp();
-			description += ", </br>timestamp_local=" + df.format(new Date(vehicle.getTimestamp()));
-			df.setTimeZone(TimeZone.getTimeZone("UTC"));
-			description += ", </br>timestamp_UTC=" + df.format(new Date(vehicle.getTimestamp()));
-			description += ", </br>label=" + vehicle.getVehicle().getLabel();
-			description += ", </br>license_plate=" + vehicle.getVehicle().getLicensePlate();
-			description += ", </br>current_status=" + vehicle.getCurrentStatus().name();
-			description += ", </br>congestion_level=" + vehicle.getCongestionLevel().name();
-			v.setDescription(description);
+      // Create an instance of SimpleDateFormat used for formatting
+      // the string representation of date (month/day/year)
+      DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+      
+      String description = "";
+      
+      description += "id=" + vehicleId;
+      description += ", </br>latitude=" + position.getLatitude();
+      description += ", </br>longitude=" + position.getLongitude();
+      description += ", </br>trip=" + vehicle.getTrip().getTripId();
+      description += ", </br>route=" + vehicle.getTrip().getRouteId();
+      description += ", </br>schedule_relationship=" + vehicle.getTrip().getScheduleRelationship();
+      description += ", </br>current_stop_sequence=" + vehicle.getCurrentStopSequence();
+      description += ", </br>stop_id=" + vehicle.getStopId();
+      
+      long time = vehicle.getTimestamp();
+      if(System.currentTimeMillis() - time  > 8640000 ){
+    	  // no esta en milisegundos posiblemente en segundos
+    	  time = time * 1000;				
+      }
+      
+      description += ", </br>timestamp_number=" + time;
+      description += ", </br>timestamp_local=" + df.format(new Date(time));
+      df.setTimeZone(TimeZone.getTimeZone("UTC"));
+      description += ", </br>timestamp_UTC=" + df.format(new Date(time));
+      description += ", </br>label=" + vehicle.getVehicle().getLabel();
+      description += ", </br>license_plate=" + vehicle.getVehicle().getLicensePlate();
+      description += ", </br>current_status=" + vehicle.getCurrentStatus().name();
+      description += ", </br>congestion_level=" + vehicle.getCongestionLevel().name();
+      v.setDescription(description);
       
       //modificar para agregar datos a la ventana
       
